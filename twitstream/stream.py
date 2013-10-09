@@ -1,9 +1,11 @@
 import tweepy
 import time
-import twitterinfo
+import info
+import twitterconfig
+
 class tweeter:
 	def __init__(self):
-		x = twitterinfo.twitterinfo()
+		x = twitterconfig.config()
 		self.consumer_key = x.consumerkey
 		self.consumer_secret = x.consumersec
 		self.access_token_key = x.accesstoken

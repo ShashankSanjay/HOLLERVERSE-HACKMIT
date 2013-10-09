@@ -1,31 +1,43 @@
 import uuid
-import pysftp
 import os
 import sftpinfo
+import ftplib
+from twilio import twiml
+
 class twiliohelp:
 	def __init__(self):
 		print "twiliohelp"
 		self.flin = sftpinfo.ftpinformation()
-	def makevoiceXML(self,message,voice): #accepts voices man woman robot
-		self.makeFile('<?xml version="1.0" encoding="UTF-8"?> <Response> <Say voice="'+str(voice).lower()+'">'+str(message)+ ' </Say> </Response>')
+
+	def makeVoiceXML(self,message,voice): #accepts voices man woman robot
+		r = twiml.Response()
+		r.say(str(message))
+		return (self.makeFile(str(r)))
 
 	def makeAudioFileXML(self,url,loop):
-		self.makeFile('<?xml version="1.0" encoding="UTF-8"?> <Response> <Play loop="'+str(loop)+'">'+str(url)+ ' </play> </Response>')
+		r = twiml.Response()
+		r.play(str(url), str(loop))
+
+		self.makeFile(str(r))
 
 	def makeRecordXML(self, timeout, transcribe):
 		self.makeFile('<?xml version="1.0" encoding="UTF-8"?> <Response> <Record timeout="'+str(timeout)+' transcribe="'+str(transcribe)+' />')
 
 	def makeFile(self,xml):
-		unique_filename = uuid.uuid1()
+		unique_filename = str(uuid.uuid1())+".xml"
 		print unique_filename
 		f = open(str(unique_filename),'w')
 		f.write(xml)
 		f.close();
-		self.fileUpload(str(unique_filename))
+		return (self.fileUpload(str(unique_filename)))
 
 	def fileUpload(self,fn):
-		srv = pysftp.Connection('michaelmoskie.com',username=str(self.flin.user),password=str(self.flin.password))
-		srv.put(fn)
-		print "upload complete"
+		print(self.flin.url, self.flin.user, self.flin.password)
+
+		srv = ftplib.FTP(self.flin.url, self.flin.user, self.flin.password)
+		srv.cwd("public_html/hollerverse")
+		files = open(fn, 'r')
+		srv.storbinary("STOR "+fn, files)
 		srv.close()
 		os.remove(fn)
+		return (fn)

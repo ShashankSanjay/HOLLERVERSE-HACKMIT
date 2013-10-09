@@ -62,11 +62,14 @@ class main(wx.Frame): #Main Frame
 		print event
 		self.twilio.sms(str(self.posCtrlmsg.GetValue()),str(self.posCtrlat.GetValue()))
 
+	def audio(self, event):
+		self.twilio.audio('+1'+str(self.posCtrlat.GetValue()),str(self.posCtrlmsg.GetValue()))
+
 	def call(self,event):
 		self.twilio.makeCall('+1'+str(self.posCtrlat.GetValue()),str(self.posCtrlmsg.GetValue()))
 	
 	def email(self,event):
-		self.sendgrid.mail("hollerverse@gmail.com", str(self.posCtrlat.GetValue()),"Balls", "SUBJECTIFY", str(self.posCtrlmsg.GetValue()))
+		self.sendgrid.mail("hollerverse@gmail.com", str(self.posCtrlat.GetValue()), str(self.posCtrlmsg.GetValue()))
 		
 		
 
@@ -74,6 +77,7 @@ class main(wx.Frame): #Main Frame
 		print "holler holler, it's murdaaa"
 		if(str(self.posCtrlphone.GetValue())):
 			self.twilio.sms(str(self.posCtrlholler.GetValue()),str(self.posCtrlphone.GetValue()))
+			self.twilio.call(str(self.posCtrlholler.GetValue()),str(self.posCtrlphone.GetValue()))
 		if(str(self.posCtrlem.GetValue())):
 			self.sendgrid.mail("hollerverse@gmail.com", str(self.posCtrlem.GetValue()),str(self.posCtrlem.GetValue()), str(self.posCtrlsubj.GetValue()), str(self.posCtrlholler.GetValue()))
 		if(str(self.posCtrltw.GetValue())):
